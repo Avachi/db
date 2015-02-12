@@ -1,0 +1,32 @@
+SET TERM ^ ;
+
+CREATE OR ALTER procedure CHECK_PAID
+as
+declare variable CAR_ID integer;
+declare variable DD integer;
+declare variable PAID decimal(10,2);
+declare variable PAID_END decimal(10,2);
+begin
+        for select id,payed,payed_end from car where (payed_end < current_date or payed_end is null)  and  payed >= 10 into :car_id,:paid,:paid_end do
+        begin
+        execute procedure math_payed (:paid,10) RETURNING_VALUES (:dd,:paid);
+        update car set payed = :paid where id=:car_id;
+        if (:PAID_END is null) then update car set payed_end = DATEADD(:dd MONTH to CURRENT_DATE) WHERE id=:car_id;
+        else update car set payed_end = DATEADD( MONTH, :dd, car.payed_end) WHERE id=:car_id;
+        end
+
+        for select id from car where (payed_end < current_date or payed_end is null) and  payed < 10 into :car_id do
+        begin
+        UPDATE car SET is_paid=2 WHERE id=:car_id;
+        UPDATE car SET payed_end=null WHERE id=:car_id;
+        end
+
+        for select id from car where payed_end >= current_date and is_paid = 2 into :car_id do
+        begin
+        UPDATE car SET is_paid=1 WHERE id=:car_id;
+        end
+end
+^
+
+SET TERM ; ^
+

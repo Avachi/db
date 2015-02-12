@@ -1,0 +1,19 @@
+SET TERM ^ ;
+
+CREATE OR ALTER procedure MATH_PAYED (
+    PAYED decimal(10,2),
+    COST decimal(10,2))
+returns (
+    DD integer,
+    NEW_PAYED decimal(10,2))
+as
+declare variable DIV decimal(10,2);
+begin
+            div = :payed/:cost;
+            dd = FLOOR(div);
+            new_payed = :payed-(dd*:cost);
+end
+^
+
+SET TERM ; ^
+

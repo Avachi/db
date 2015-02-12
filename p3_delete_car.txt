@@ -1,0 +1,17 @@
+SET TERM ^ ;
+
+CREATE OR ALTER procedure DELETE_CAR (
+    P integer,
+    CR date)
+as
+declare variable CAR_ID integer;
+begin
+        for select id from car where create_date<:cr and is_paid=:p into :car_id do
+        begin
+        delete from car where id=:car_id;
+        end
+end
+^
+
+SET TERM ; ^
+
