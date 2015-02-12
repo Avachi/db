@@ -1,0 +1,18 @@
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tr_payed for car
+active before update position 0
+as
+ declare variable dd int;
+    begin
+        if (new.payed > old.payed) then
+            begin
+            execute procedure math_payed (new.payed,10) RETURNING_VALUES (dd,new.payed);
+            if (old.payed_end is null) then new.payed_end = DATEADD(:dd MONTH to CURRENT_DATE);
+            else new.payed_end = DATEADD( MONTH, :dd, old.payed_end);
+            end
+end
+^
+
+SET TERM ; ^
+

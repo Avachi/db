@@ -1,0 +1,12 @@
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tr_del_car for car
+active before delete position 0
+as begin
+    delete from views where car = old.id;
+    delete from money where car_id = old.id;
+end
+^
+
+SET TERM ; ^
+

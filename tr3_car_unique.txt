@@ -1,0 +1,16 @@
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tr_check_car_unique for car
+active before insert position 0
+as
+begin    
+
+    if( exists (select id from car where body=new.body and condition=new.condition and
+    engine=new.engine and model=new.model and transmission=new.transmission and
+    person=new.person and edition_year = new.edition_year and color=new.color))
+    then exception CAR_EXIST;
+end
+^
+
+SET TERM ; ^
+

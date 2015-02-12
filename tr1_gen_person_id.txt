@@ -1,0 +1,15 @@
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tr_gen_person_id for person
+active before insert position 0
+as
+begin
+  if (new.id is null) then
+  begin
+    new.id = gen_id(gen_person_id, 1);
+  end
+end
+^
+
+SET TERM ; ^
+
